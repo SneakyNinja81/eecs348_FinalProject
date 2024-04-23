@@ -1,26 +1,37 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
+bool AND (bool a, bool b) {
+    return a && b;
+}
 
-int[] getinsidemostparent(std::string expression) {
-  for (int i = 0; i < expression.length(); i++) {
-    if (expression[i] == ')') {
-      for (int j = i - 1; j >= 0; j--) {
-        if (expression[j] == '(') {
-          return [j,]
-        }
-      }
+bool OR (bool a, bool b) {
+    return a || b;
+}
+
+bool NAND (bool a, bool b) {
+    return !(a && b);
+}
+
+bool NOR (bool a, bool b) {
+    return !(a || b);
+}
+
+bool XOR (bool a, bool b) {
+    return a ^ b;
+}
+
+void main () {
+    string expr;
+    cout << "Type the expression:\n"
+    cin >> expr;
+    bool ans = solve(expr);
+    cout << "The expression is ", ans;
+}
+
+bool solve (string expr) {
+    int length = expr.length() - 1;
+    for (int i = 0; i < length; i++) {
+
     }
-  }
-}
-
-int main() {
-  std:string expression = "(T | F) $ F";
-  // find first ) then go forward to the next (
-  // simplify that expression 
-  int start = getinsidemostparent(expression)[0];
-  int end = getinsidemostparent(expression)[1];
-
-  std:
-
-}
