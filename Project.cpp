@@ -24,7 +24,7 @@ bool XOR (bool a, bool b) {
 
 void main () {
     string expr;
-    cout << "Type the expression:\n"
+    cout << "Type the expression:\n";
     cin >> expr;
     bool ans = solve(expr);
     cout << "The expression is ", ans;
