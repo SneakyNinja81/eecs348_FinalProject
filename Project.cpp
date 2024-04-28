@@ -64,17 +64,18 @@ string parse(string expr) {
                 break;
             case '(':
             {
-                    int j = expr.find(')', i);
-                    if (j == string::npos) {
-                        cerr << "Error: Missing closing parenthesis.\n";
-                        return ""; // Return empty string to indicate failure
-                    }
-                    // Extract the substring within parentheses and parse it recursively
-                    string subExpr = expr.substr(i + 1, j - i - 1);
-                    string parsedSubExpr = parse(subExpr);
-                    newExpr += parsedSubExpr;
-                    i = j; // Update index to skip the processed substring
-                    break;
+                // print ("Found opening parenthesis at index: " + str(i))
+                int j = expr.find(')', i);
+                if (j == string::npos) {
+                    cerr << "Error: Missing closing parenthesis.\n";
+                    return ""; // Return empty string to indicate failure
+                }
+                // Extract the substring within parentheses and parse it recursively
+                string subExpr = expr.substr(i + 1, j - i - 1);
+                string parsedSubExpr = parse(subExpr);
+                newExpr += parsedSubExpr;
+                i = j; // Update index to skip the processed substring
+                break;
             }
             case ')':
                 cerr << "Error: Missing opening parenthesis.\n";
@@ -86,12 +87,23 @@ string parse(string expr) {
     return newExpr;
 }
 
+string remove_spaces(string expr) {
+    string newExpr;
+    // go through each character if it is not a space add it to the new string
+    for (int i = 0; i < expr.length(); ++i) {
+        if (expr[i] != ' ') {
+            newExpr += expr[i];
+        }
+    }
+    return newExpr;
+}
 int main() {
     string expr;
     cout << "Type the expression:\n";
-    cin >> expr;
+    std::getline(std::cin, expr);
+    expr = remove_spaces(expr);
     string ans = parse(expr);
     cout << "The expression is\n";
-    cout << ans;
+    cout << ans << "\n";
     return 0;
 }
