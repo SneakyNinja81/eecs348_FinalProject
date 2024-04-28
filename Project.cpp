@@ -40,7 +40,7 @@ char NOR(char a, char b) {
 }
 
 int check_if_symbols_adjacent_to_operation_are_valid(string expr, int i) {
-  if ((expr[i - 1] == 'T' || expr[i - 1] == 'F') && (expr[i + 1] == 'T' || expr[i + 1] == 'F')) {
+  if ((expr[i - 1] == 'T' || expr[i - 1] == 'F' || expr[i - 1] == ')') && (expr[i + 1] == 'T' || expr[i + 1] == 'F' || expr[i + 1] == '(')){
     return 1;
   } else {
     return 0;
@@ -53,6 +53,7 @@ string parse(string expr) {
     string newExpr;
     unordered_set<char> operations =  {'&', '|', '!', '@', '$'};
     for (int i = 0; i < expr.length(); ++i) {
+        cout << "Parsing: " << expr << "\n";
         if (operations.find(expr[i]) != operations.end()) {
           if (!check_if_symbols_adjacent_to_operation_are_valid(expr, i)) {
             cout << "The expression is " << expr << "\n";
