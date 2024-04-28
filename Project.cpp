@@ -2,82 +2,96 @@
 #include <string>
 using namespace std;
 
-char NOT (char a) {
+char NOT(char a) {
     if (a == 'T') {
         return 'F';
-    }
-    else {
+    } else {
         return 'T';
     }
 }
 
-char AND (char a, char b) {
+char AND(char a, char b) {
     if (a == 'T' && b == 'T') {
         return 'T';
     }
     return 'F';
 }
 
-char OR (char a, char b) {
-    if (a == 'T' | b == 'T') {
+char OR(char a, char b) {
+    if (a == 'T' || b == 'T') {
         return 'T';
     }
     return 'F';
 }
 
-char NAND (char a, char b) {
+char NAND(char a, char b) {
     if (a == 'T' && b == 'T') {
         return 'F';
     }
     return 'T';
 }
 
-char NOR (char a, char b) {
-    if (a == 'T' | b == 'T') {
-        return 'F';
+char NOR(char a, char b) {
+    if (a == 'F' && b == 'F') {
+        return 'T';
     }
-    return 'T';
+    return 'F';
 }
 
-bool XOR (bool a, bool b) {
-    return a ^ b;
-}
-
-void main () {
-    string expr;
-    cout << "Type the expression:\n";
-    cin >> expr;
-    string ans = parse(expr);
-    cout << "The expression is ", ans;
-}
-
-string parse (string expr) {
+string parse(string expr) {
     string newExpr;
-    int length = expr.length() - 1;
-    for (int i = 0; i < length; i++) {
-        switch(expr[i]) {
+    for (int i = 0; i < expr.length(); ++i) {
+        switch (expr[i]) {
             case '&':
-                newExpr[-1] = AND(newExpr[-1], expr[i+1]);
-                i++;
+                newExpr[newExpr.length() - 1] = AND(newExpr[newExpr.length() - 1], expr[i + 1]);
+                ++i;
                 break;
             case '|':
-                newExpr[-1] = OR(newExpr[-1], expr[i+1]);
-                i++;
+                newExpr[newExpr.length() - 1] = OR(newExpr[newExpr.length() - 1], expr[i + 1]);
+                ++i;
                 break;
             case '!':
-                newExpr += NOT(expr[i+1]);
-                i++;
+                newExpr += NOT(expr[i + 1]);
+                ++i;
                 break;
             case '@':
-                newExpr[-1] = NAND(newExpr[-1], expr[i+1]);
-                i++;
+                newExpr[newExpr.length() - 1] = NAND(newExpr[newExpr.length() - 1], expr[i + 1]);
+                ++i;
                 break;
             case '$':
-                newExpr[-1] = NOR(newExpr[-1], expr[i+1]);
-                i++;
+                newExpr[newExpr.length() - 1] = NOR(newExpr[newExpr.length() - 1], expr[i + 1]);
+                ++i;
                 break;
+            case '(':
+            {
+                    int j = expr.find(')', i);
+                    if (j == string::npos) {
+                        cerr << "Error: Missing closing parenthesis.\n";
+                        return ""; // Return empty string to indicate failure
+                    }
+                    // Extract the substring within parentheses and parse it recursively
+                    string subExpr = expr.substr(i + 1, j - i - 1);
+                    string parsedSubExpr = parse(subExpr);
+                    newExpr += parsedSubExpr;
+                    i = j; // Update index to skip the processed substring
+                    break;
+            }
+            case ')':
+                cerr << "Error: Missing opening parenthesis.\n";
+                return "";
             default:
                 newExpr += expr[i];
         }
     }
+    return newExpr;
+}
+
+int main() {
+    string expr;
+    cout << "Type the expression:\n";
+    cin >> expr;
+    string ans = parse(expr);
+    cout << "The expression is\n";
+    cout << ans;
+    return 0;
 }
