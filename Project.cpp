@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <unordered_set>
 using namespace std;
 
 char NOT(char a) {
@@ -38,10 +39,27 @@ char NOR(char a, char b) {
     return 'F';
 }
 
+int check_if_symbols_adjacent_to_operation_are_valid(string expr, int i) {
+  if ((expr[i - 1] == 'T' || expr[i - 1] == 'F') && (expr[i + 1] == 'T' || expr[i + 1] == 'F')) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+
 string parse(string expr) {
+    cout << "Parsing: " << expr << "\n";
     string newExpr;
+    unordered_set<char> operations =  {'&', '|', '!', '@', '$'};
     for (int i = 0; i < expr.length(); ++i) {
-        switch (expr[i]) {
+        if (operations.find(expr[i]) != operations.end()) {
+          if (!check_if_symbols_adjacent_to_operation_are_valid(expr, i)) {
+            cout << "The expression is " << expr << "\n";
+            cerr << "Error: Invalid symbols adjacent to operation.\n";
+            return "";
+          }
+          switch (expr[i]) {
             case '&':
                 newExpr[newExpr.length() - 1] = AND(newExpr[newExpr.length() - 1], expr[i + 1]);
                 ++i;
@@ -62,6 +80,10 @@ string parse(string expr) {
                 newExpr[newExpr.length() - 1] = NOR(newExpr[newExpr.length() - 1], expr[i + 1]);
                 ++i;
                 break;
+          }
+        }
+        else {
+          switch (expr[i]) {
             case '(':
             {
                 // print ("Found opening parenthesis at index: " + str(i))
@@ -83,6 +105,7 @@ string parse(string expr) {
             default:
                 newExpr += expr[i];
         }
+      }
     }
     return newExpr;
 }
@@ -103,6 +126,9 @@ int main() {
     std::getline(std::cin, expr);
     expr = remove_spaces(expr);
     string ans = parse(expr);
+    if (ans == "") {
+        return 1;
+    }
     cout << "The expression is\n";
     cout << ans << "\n";
     return 0;
