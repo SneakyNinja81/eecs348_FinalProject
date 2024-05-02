@@ -39,8 +39,8 @@ char NOR(char a, char b) {
     return 'F';
 }
 
-int check_if_symbols_adjacent_to_operation_are_valid(string expr, int i) {
-  if ((expr[i - 1] == 'T' || expr[i - 1] == 'F' || expr[i - 1] == ')') && (expr[i + 1] == 'T' || expr[i + 1] == 'F' || expr[i + 1] == '(')){
+int check_symbols(string expr, int i) {
+  if ((expr[i - 1] == 'T' || expr[i - 1] == 'F' || expr[i - 1] == ')' || expr[i - 1] == '!') && (expr[i + 1] == 'T' || expr[i + 1] == 'F' || expr[i + 1] == '(' || expr[i + 1] == '!')){
     return 1;
   } else {
     return 0;
@@ -49,63 +49,63 @@ int check_if_symbols_adjacent_to_operation_are_valid(string expr, int i) {
 
 
 string parse(string expr) {
-    cout << "Parsing: " << expr << "\n";
     string newExpr;
     unordered_set<char> operations =  {'&', '|', '!', '@', '$'};
     for (int i = 0; i < expr.length(); ++i) {
-        cout << "Parsing: " << expr << "\n";
         if (operations.find(expr[i]) != operations.end()) {
-          if (!check_if_symbols_adjacent_to_operation_are_valid(expr, i)) {
+          if (!check_symbols(expr, i)) {
             cout << "The expression is " << expr << "\n";
             cerr << "Error: Invalid symbols adjacent to operation.\n";
             return "";
           }
           switch (expr[i]) {
             case '&':
-                newExpr[newExpr.length() - 1] = AND(newExpr[newExpr.length() - 1], expr[i + 1]);
-                ++i;
+                newExpr[0] = AND(newExpr[newExpr.length() - 1], parse(expr.substr(i + 1, expr.length()-1))[0]);
                 break;
             case '|':
-                newExpr[newExpr.length() - 1] = OR(newExpr[newExpr.length() - 1], expr[i + 1]);
-                ++i;
+                newExpr[0] = OR(newExpr[newExpr.length() - 1], parse(expr.substr(i + 1, expr.length()-1))[0]);
                 break;
             case '!':
-                newExpr += NOT(expr[i + 1]);
-                ++i;
+                newExpr += NOT(parse(expr.substr(i + 1, expr.length()-1))[0]);
                 break;
             case '@':
-                newExpr[newExpr.length() - 1] = NAND(newExpr[newExpr.length() - 1], expr[i + 1]);
-                ++i;
+                newExpr[0] = NAND(newExpr[newExpr.length() - 1], parse(expr.substr(i + 1, expr.length()-1))[0]);
                 break;
             case '$':
-                newExpr[newExpr.length() - 1] = NOR(newExpr[newExpr.length() - 1], expr[i + 1]);
-                ++i;
+                newExpr[0] = NOR(newExpr[newExpr.length() - 1], parse(expr.substr(i + 1, expr.length()-1))[0]);
                 break;
           }
         }
         else {
-          switch (expr[i]) {
-            case '(':
-            {
-                // print ("Found opening parenthesis at index: " + str(i))
-                int j = expr.find(')', i);
-                if (j == string::npos) {
-                    cerr << "Error: Missing closing parenthesis.\n";
-                    return ""; // Return empty string to indicate failure
-                }
-                // Extract the substring within parentheses and parse it recursively
-                string subExpr = expr.substr(i + 1, j - i - 1);
-                string parsedSubExpr = parse(subExpr);
-                newExpr += parsedSubExpr;
-                i = j; // Update index to skip the processed substring
-                break;
+            switch (expr[i]) {
+                case '(':
+                    {
+                        int j = i + 1;
+                        int level = 1;
+                        while (j < expr.length() && level > 0) {
+                            if (expr[j] == '(') {
+                                level++;
+                            } else if (expr[j] == ')') {
+                                level--;
+                            }
+                            j++;
+                        }
+                        if (level > 0) {
+                            cerr << "Error: Missing closing parenthesis." << endl;
+                            return "";
+                        }
+                        string subExpr = expr.substr(i + 1, j - i - 2);
+                        string parsedSubExpr = parse(subExpr);
+                        newExpr += parsedSubExpr;
+                        i = j - 1; // Update index to skip the processed substring
+                        break;
+                    }
+                case ')':
+                    cerr << "Error: Missing opening parenthesis." << endl;
+                    return "";
+                default:
+                    newExpr += expr[i];
             }
-            case ')':
-                cerr << "Error: Missing opening parenthesis.\n";
-                return "";
-            default:
-                newExpr += expr[i];
-        }
       }
     }
     return newExpr;
@@ -131,6 +131,6 @@ int main() {
         return 1;
     }
     cout << "The expression is\n";
-    cout << ans << "\n";
+    cout << ans[0] << "\n";
     return 0;
 }
