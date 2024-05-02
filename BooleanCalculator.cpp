@@ -146,6 +146,11 @@ bool expression_is_valid(string expr) {
     }
 }
 
+string parse_parens(string expr) {
+    string new_expr = expr;
+    return new_expr;
+}
+
 char parse(string expr) {
     cout << "Beginning expression parse.\n";
     return 'T'; //temporary
