@@ -5,7 +5,19 @@ using namespace std;
 
 unordered_set<char> INNER_OPERATIONS =  {'&', '|', '@', '$'};
 unordered_set<char> OUTER_OPERATIONS = {'!', '(', ')'};
-unordered_set<char> VALUES = {'T', 'F'};
+unordered_set<char> TRUTH_VALUES = {'T', 'F'};
+
+bool is_inner_operation(char a) {
+    return (INNER_OPERATIONS.find(a) != INNER_OPERATIONS.end());
+}
+
+bool is_outer_operation(char a) {
+    return (OUTER_OPERATIONS.find(a) != OUTER_OPERATIONS.end());
+}
+
+bool is_truth_value(char a) {
+    return (TRUTH_VALUES.find(a) != TRUTH_VALUES.end());
+}
 
 char NOT(char a) {
     if (a == 'T') {
@@ -54,18 +66,53 @@ string remove_spaces(string expr) {
     return newExpr;
 }
 
-bool expression_is_valid(string expr) {
+bool chars_are_valid(string expr) {
     for (int i = 0; i < expr.length(); ++i) {
-        bool is_valid_char = ((INNER_OPERATIONS.find(expr[i]) != INNER_OPERATIONS.end()) 
-        || (OUTER_OPERATIONS.find(expr[i]) != OUTER_OPERATIONS.end()) 
-        || (VALUES.find(expr[i]) != VALUES.end()));
+        bool is_valid_char = (is_inner_operation(expr[i]) || is_outer_operation(expr[i]) || is_truth_value(expr[i]));
         if (!is_valid_char) {
             cout << "Invalid character at i = " << i << "\n";
             return false;
         }
     }
-    cout << "Expression is valid.\n";
+    cout << "Expression contains valid characters.\n";
     return true;
+}
+
+bool sequence_is_valid(string expr) {
+    for (int i = 0; i < expr.length(); ++i) {
+        bool is_outer_char = (i == 0 || i == expr.length() - 1 //first or last
+            || expr[i - 1] == '(' || expr[i + 1] == ')' //after '(' or before ')'
+            || expr[i - 1] == '!') ; //after '!'
+        if ((is_outer_char && is_inner_operation(expr[i]))) {
+            cout << "Invalid. Outer character is inner operation at i = " << i << "\n";
+            return false;
+        }
+        else if (is_truth_value(expr[i]) &&  is_truth_value(expr[i + 1])) {
+            cout << "Invalid. Adjacent truth values at i = " << i << " and i = " << i + 1 << "\n";
+            return false;
+        }
+        else if (is_inner_operation(expr[i]) && is_inner_operation(expr[i + 1])) {
+            cout << "Invalid. Adjacent inner operations at i = " << i << " and i = " << i + 1 << "\n";
+            return false;
+        }
+        else if (i == expr.length() - 1 && expr[i] == '!') {
+            cout << "Invalid. Expression cannot end in '!'\n";
+            return false;
+        }
+    }
+    cout << "Expression sequence is valid.\n";
+    return true;
+}
+
+bool expression_is_valid(string expr) {
+    if (chars_are_valid(expr) && sequence_is_valid(expr)) {
+        cout << "Expression is valid.\n";
+        return true;
+    }
+    else {
+        cout << "Invalid expression.\n";
+        return false;
+    }
 }
 
 char parse(string expr) {
