@@ -78,6 +78,29 @@ bool chars_are_valid(string expr) {
     return true;
 }
 
+bool parens_are_valid(string expr) {
+    int open_count = 0;
+    int close_count = 0;
+    for (int i = 0; i < expr.length(); ++i) {
+        if (expr[i] == '(') {
+            open_count++;
+        }
+        if (expr[i] == ')') {
+            close_count++;
+        }
+        if (close_count > open_count) {
+            cout << "Invalid. Extraneous ')' at i = " << i << "\n";
+            return false;
+        }
+    }
+    if (close_count != open_count) {
+        cout << "Invalid. Expression missing ')'\n";
+        return false;
+    }
+    cout << "Expression contains valid parentheses.\n";
+    return true;
+}
+
 bool sequence_is_valid(string expr) {
     for (int i = 0; i < expr.length(); ++i) {
         bool is_outer_char = (i == 0 || i == expr.length() - 1 //first or last
@@ -99,13 +122,21 @@ bool sequence_is_valid(string expr) {
             cout << "Invalid. Expression cannot end in '!'\n";
             return false;
         }
+        else if (expr[i] == '(' && expr[i + 1] == ')') {
+            cout << "Invalid. Parentheses set must contain a value.\n";
+            return false;
+        }
+        else if (expr[i] == ')' && expr[i + 1] == '(') {
+            cout << "Invalid. Missing operator between i = " << i << " and i = " << i + 1 << "\n";
+            return false;
+        }
     }
     cout << "Expression sequence is valid.\n";
     return true;
 }
 
 bool expression_is_valid(string expr) {
-    if (chars_are_valid(expr) && sequence_is_valid(expr)) {
+    if (chars_are_valid(expr) && parens_are_valid(expr) && sequence_is_valid(expr)) {
         cout << "Expression is valid.\n";
         return true;
     }
