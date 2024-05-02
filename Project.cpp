@@ -94,6 +94,51 @@ string evlaute_nots(string expr) {
   }
   return expr;
 }
+string parse_expression_without_parentheses(string expr) {
+  string ans = expr;
+  ans = evlaute_nots(ans);
+  cout << "The expression is " << ans << "\n";
+  while (ans.length() > 1) {
+    cout << "The length of the expression is " << ans.length() << "\n";
+    cout << "The expression is " << ans << "\n";
+    if ((expr[0] == 'T' || expr[0] == 'F') && (expr[2] == 'T' || expr[2] == 'F')) 
+    {
+      cout << "The operator is " << expr[1] << "\n";
+      switch (expr[1]) {
+          case '&':
+              ans[1] = AND(expr[0], expr[2]);
+              ans.erase(0, 1);
+              ans.erase(1, 1);
+              break;
+          case '|':
+              ans[1] = OR(expr[0], expr[2]);
+              ans.erase(0, 1);
+              ans.erase(1, 1);
+              break;
+          case '@':
+              ans[1] = NAND(expr[0], expr[2]);
+              ans.erase(0, 1);
+              ans.erase(1, 1);;
+              break;
+          case '$':
+              ans[1] = XOR(expr[0], expr[2]);
+              ans.erase(0, 1);
+              ans.erase(1, 1);
+              break;
+          default:
+              cout << "Invalid expression" << endl;
+              throw std::invalid_argument("Invalid expression");
+              break;
+        }
+    }
+    else
+    {
+      cout << "Invalid expression" << endl;
+      throw std::invalid_argument("Invalid expression");
+    }
+  }
+  return ans;
+}
 string parse_single_operator(string single_expr) {
   std::string ans;
   single_expr = evlaute_nots(single_expr);
@@ -139,7 +184,8 @@ string parse_expression(string expr) {
   std:vector<int> indicies = find_inner_parentheses(expr);
   // if there are no parentheses just evaluate the expression
   if (indicies[0] == -1) {
-    return parse_single_operator(expr);
+    cout << "There are no parentheses in the expression" << endl;
+    return parse_expression_without_parentheses(expr);
   }
   // otherwise evaluate the inner expression
   cout << "The index of the inner parentheses are " << indicies[0] << " and " << indicies[1] << "\n";
@@ -164,23 +210,6 @@ string parse(string expr) {
             cout << "The expression is " << expr << "\n";
             cerr << "Error: Invalid symbols adjacent to operation.\n";
             return "";
-          }
-          switch (expr[i]) {
-            case '&':
-                newExpr[0] = AND(newExpr[newExpr.length() - 1], parse(expr.substr(i + 1, expr.length()-1))[0]);
-                break;
-            case '|':
-                newExpr[0] = OR(newExpr[newExpr.length() - 1], parse(expr.substr(i + 1, expr.length()-1))[0]);
-                break;
-            case '!':
-                newExpr += NOT(parse(expr.substr(i + 1, expr.length()-1))[0]);
-                break;
-            case '@':
-                newExpr[0] = NAND(newExpr[newExpr.length() - 1], parse(expr.substr(i + 1, expr.length()-1))[0]);
-                break;
-            case '$':
-                newExpr[0] = XOR(newExpr[newExpr.length() - 1], parse(expr.substr(i + 1, expr.length()-1))[0]);
-                break;
           }
         }
         else {
@@ -233,8 +262,6 @@ int main() {
     cout << "Type the expression:\n";
     std::getline(std::cin, expr);
     expr = remove_spaces(expr);
-    // expr = add_parentheses_to_evaluatenotfirst(expr);
-    cout << "The expression after inserting parentheses is " << expr << "\n";
     string ans = parse_expression(expr);
     cout << "The expression is\n";
     cout << ans << "\n";
