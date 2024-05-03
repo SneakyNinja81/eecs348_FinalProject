@@ -56,14 +56,14 @@ char NOR(char a, char b) {
 }
 
 string remove_spaces(string expr) {
-    string newExpr;
+    string new_expr;
     // go through each character if it is not a space add it to the new string
     for (int i = 0; i < expr.length(); ++i) {
         if (expr[i] != ' ') {
-            newExpr += expr[i];
+            new_expr += expr[i];
         }
     }
-    return newExpr;
+    return new_expr;
 }
 
 bool chars_are_valid(string expr) {
@@ -147,8 +147,27 @@ bool expression_is_valid(string expr) {
 }
 
 string parse_nots(string expr) {
-    string new_expr = expr;
-    return new_expr;
+    string new_expr = "";
+    for (int i = 0; i < expr.length(); ++i) {
+        if (expr[i - 1] == '!') {
+            if (expr[i] == 'T') {
+                new_expr += 'F';
+            }
+            else if (expr[i] == 'F') {
+                new_expr += 'T';
+            }
+        }
+        else {
+            new_expr += expr[i];
+        }
+    }
+    string no_not_expr = "";
+    for (int i = 0; i < new_expr.length(); ++i) {
+        if (new_expr[i] != '!') {
+            no_not_expr += new_expr[i];
+        }
+    }
+    return no_not_expr;
 }
 
 string parse_no_parens(string expr) {
@@ -183,11 +202,11 @@ string parse_parens(string expr, int index) {
     cout << "Beginning parentheses parse of " << expr << "\n";
     string new_expr = expr;
     int i_paren_right = 0;
-    cout << "i_paren_right set to 0: " << i_paren_right << "\n";
+    //cout << "i_paren_right set to 0: " << i_paren_right << "\n";
     for (int i = index; i < new_expr.length(); ++i) {
         if (new_expr[i] == ')') {
             i_paren_right = i;
-            cout << "i_paren_right set: " << i_paren_right << "\n";
+            //cout << "i_paren_right set: " << i_paren_right << "\n";
             break;
         }
     }
@@ -210,14 +229,14 @@ string parse(string expr, int index) {
     cout << "Parsing " << new_expr << "\n";
     if (new_expr.find(')') != string::npos) {
         int i_paren_left = 0;
-        cout << "i_paren_left set to 0: " << i_paren_left << "\n";
+        //cout << "i_paren_left set to 0: " << i_paren_left << "\n";
         for (int i = 0; i < new_expr.length(); ++i) {
             if (new_expr[i] == '(') {
                 i_paren_left = i;
-                cout << "i_paren_left set: " << i_paren_left << "\n";
+                //cout << "i_paren_left set: " << i_paren_left << "\n";
             }
             if (new_expr[i] == ')') {
-                cout << "i_paren_left passed to parse_parens: " << i_paren_left << "\n";
+                //cout << "i_paren_left passed to parse_parens: " << i_paren_left << "\n";
                 new_expr = parse_parens(new_expr, i_paren_left + 1);
                 break;
             }
