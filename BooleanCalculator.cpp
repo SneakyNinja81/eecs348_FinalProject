@@ -126,6 +126,10 @@ bool sequence_is_valid(string expr) {
             cout << "Invalid. Consecutive !s at i = " << i << " and i = " << i + 1 << "\n";
             return false;
         }
+        else if (is_truth_value(expr[i]) && (expr[i - 1] == ')' || expr[i + 1] == '(')) {
+            cout << "Invalid. Truth value adjacent to outer parenthesis at i = " << i << "\n";
+            return false;
+        }
     }
     //cout << "Expression sequence is valid.\n";
     return true;
