@@ -1,15 +1,15 @@
 # User Manual
 ## Introduction
-This reposotority contain the c++ code for a boolean algebra calcualtor. 
-The calcualtor takes as input boolean algebra expressions and outputs the expressions truth value table.
+This repository contain the C++ code for a Boolean algebra calcualtor. 
+The calculator takes an input Boolean algebra expression and outputs the expression's truth value.
 
 
-To install run `git clone https://github.com/SneakyNinja81/eecs348_FinalProject.git` in the terminal.
-Then compile the code with `g++ Project.cpp -o Project.exe` on Linux or Windows and `g++ Project.cpp -std=c++11 -o Projec.exe` on Mac.
-Finally you can run the program with `./Project.exe`
+To install, run `git clone https://github.com/SneakyNinja81/eecs348_FinalProject.git` in the terminal.
+Then, compile the code with `g++ Project.cpp -o Project.exe` on Linux or Windows and `g++ Project.cpp -std=c++11 -o Projec.exe` on Mac.
+Finally, run the program with `./Project.exe`
 
 ## Getting Started
-Enter an expression using T to represent True, F to represent False, and the folowing symbols to represent logical operators
+Enter a logical expression using T to represent True, F to represent False, and the following symbols as logical operators.
 
 <table>
    <thead>
@@ -42,7 +42,8 @@ Enter an expression using T to represent True, F to represent False, and the fol
 </table>
 
 
-Remember to use parentheses to choose which parts of the expression to evalute first.
+This calculator is programmed to handle parentheses/nested expressions.
 
 ### Example Usage
-`(T | F) $ F` will first evaluate True or False which is True and then take the result XOR with F which is True. So the calculator will return True
+`(T | F) $ F` First, the value of the expression in parentheses is determined to be True. Next, this value is compared to the next Boolean 
+in the input using the XOR operator, which evaluates as True. The whole statement has been processed, so the calculator returns True.
