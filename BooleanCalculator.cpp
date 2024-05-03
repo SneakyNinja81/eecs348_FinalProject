@@ -260,17 +260,22 @@ string parse(string expr, int index) {
 
 int main() {
     string expr;
-    cout << "Type the expression:\n";
-    std::getline(std::cin, expr);
-    cout << "\n";
-    expr = remove_spaces(expr);
-    if (expression_is_valid(expr)) {
-       string result = parse(expr, 0);
-       cout << "\nResult: " << result << "\n";
-       return 0;
-    }
-    else {
-        cerr << "Expression is invalid.\n";
-        return 1;
+    while (true) {
+        cout << "Type a Boolean expression with the following characters:\nTruth values: T, F\nOperators: !, &, |, @, $\nGrouping: (, )\n";
+        cout << "Or type X to exit\n\n";
+        std::getline(std::cin, expr);
+        cout << "\n";
+        expr = remove_spaces(expr);
+        if (expr == "X") {
+            cout << "Exiting...\n\n";
+            return 0;
+        }
+        if (expression_is_valid(expr)) {
+        string result = parse(expr, 0);
+        cout << "\nResult: " << result << "\n\n\n";
+        }
+        else {
+            cerr << "Expression is invalid.\n\n\n";
+        }
     }
 }
