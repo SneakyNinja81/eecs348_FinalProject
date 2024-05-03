@@ -19,14 +19,6 @@ bool is_truth_value(char a) {
     return (TRUTH_VALUES.find(a) != TRUTH_VALUES.end());
 }
 
-char NOT(char a) {
-    if (a == 'T') {
-        return 'F';
-    } else {
-        return 'T';
-    }
-}
-
 char AND(char a, char b) {
     if (a == 'T' && b == 'T') {
         return 'T';
@@ -48,8 +40,8 @@ char NAND(char a, char b) {
     return 'T';
 }
 
-char NOR(char a, char b) {
-    if (a == 'F' && b == 'F') {
+char XOR(char a, char b) {
+    if (a != b) {
         return 'T';
     }
     return 'F';
@@ -130,6 +122,10 @@ bool sequence_is_valid(string expr) {
             cout << "Invalid. Missing operator between i = " << i << " and i = " << i + 1 << "\n";
             return false;
         }
+        else if (expr[i] == '!' && expr[i + 1] == '!') {
+            cout << "Invalid. Consecutive !s at i = " << i << " and i = " << i + 1 << "\n";
+            return false;
+        }
     }
     cout << "Expression sequence is valid.\n";
     return true;
@@ -190,7 +186,7 @@ string parse_no_parens(string expr) {
                 leftmost_expr = NAND(new_expr[0], new_expr[2]);
                 break;
             case '$':
-                leftmost_expr = NOR(new_expr[0], new_expr[2]);
+                leftmost_expr = XOR(new_expr[0], new_expr[2]);
                 break;
         }
         new_expr = leftmost_expr + new_expr.substr(3);
