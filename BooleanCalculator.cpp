@@ -167,13 +167,16 @@ string parse_nots(string expr) {
             no_not_expr += new_expr[i];
         }
     }
+    cout << "Parsing " << no_not_expr << "\n";
     return no_not_expr;
 }
 
 string parse_no_parens(string expr) {
     cout << "Parsing " << expr << "\n";
     string new_expr = expr;
-    new_expr = parse_nots(new_expr);
+    if (new_expr.find('!') != string::npos) {
+        new_expr = parse_nots(new_expr);
+    }
     if (new_expr.length() == 1) {
         return new_expr;
     }
@@ -211,23 +214,24 @@ string parse_parens(string expr, int index) {
         }
     }
     string paren_expr = new_expr.substr(index, i_paren_right - index);
-    cout << "Parentheses expression is " << paren_expr << "\n";
+    cout << "\nParentheses expression is " << paren_expr << "\n";
     string before_parens = new_expr.substr(0, index - 1);
     //cout << "Expression before is " << before_parens << "\n";
     string after_parens = new_expr.substr(i_paren_right + 1);
     //cout << "Expression after is " << after_parens << "\n";
 
+    //cout << "2 Parsing " << paren_expr << "\n";
     paren_expr = parse_no_parens(paren_expr);
     new_expr = before_parens + paren_expr + after_parens;
-    cout << "New expression is " << new_expr << "\n";
+    cout << "\nNew expression is " << new_expr << "\n";
 
     return new_expr;
 }
 
 string parse(string expr, int index) {
     string new_expr = expr;
-    cout << "Parsing " << new_expr << "\n";
     if (new_expr.find(')') != string::npos) {
+        cout << "Parsing " << new_expr << "\n";
         int i_paren_left = 0;
         //cout << "i_paren_left set to 0: " << i_paren_left << "\n";
         for (int i = 0; i < new_expr.length(); ++i) {
@@ -258,10 +262,11 @@ int main() {
     string expr;
     cout << "Type the expression:\n";
     std::getline(std::cin, expr);
+    cout << "\n";
     expr = remove_spaces(expr);
     if (expression_is_valid(expr)) {
        string result = parse(expr, 0);
-       cout << "Result: " << result << "\n";
+       cout << "\nResult: " << result << "\n";
        return 0;
     }
     else {
