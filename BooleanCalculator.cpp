@@ -81,12 +81,12 @@ bool parens_are_valid(string expr) {
             close_count++;
         }
         if (close_count > open_count) {
-            cout << "Invalid. Extraneous ')' at i = " << i << "\n";
+            cout << "Extraneous ')' at i = " << i << "\n";
             return false;
         }
     }
     if (close_count != open_count) {
-        cout << "Invalid. Expression missing ')'\n";
+        cout << "Missing ')'\n";
         return false;
     }
     //cout << "Expression contains valid parentheses.\n";
@@ -99,35 +99,35 @@ bool sequence_is_valid(string expr) {
             || expr[i - 1] == '(' || expr[i + 1] == ')' //after '(' or before ')'
             || expr[i - 1] == '!') ; //after '!'
         if ((is_outer_char && is_inner_operation(expr[i]))) {
-            cout << "Invalid. Outer character is inner operation at i = " << i << "\n";
+            cout << "Outer character is inner operation at i = " << i << "\n";
             return false;
         }
         else if (is_truth_value(expr[i]) &&  is_truth_value(expr[i + 1])) {
-            cout << "Invalid. Adjacent truth values at i = " << i << " and i = " << i + 1 << "\n";
+            cout << "Adjacent truth values at i = " << i << " and i = " << i + 1 << "\n";
             return false;
         }
         else if (is_inner_operation(expr[i]) && is_inner_operation(expr[i + 1])) {
-            cout << "Invalid. Adjacent inner operations at i = " << i << " and i = " << i + 1 << "\n";
+            cout << "Adjacent inner operations at i = " << i << " and i = " << i + 1 << "\n";
             return false;
         }
         else if (i == expr.length() - 1 && expr[i] == '!') {
-            cout << "Invalid. Expression cannot end in '!'\n";
+            cout << "Expression cannot end in '!'\n";
             return false;
         }
         else if (expr[i] == '(' && expr[i + 1] == ')') {
-            cout << "Invalid. Parentheses set must contain a value.\n";
+            cout << "Parentheses set must contain a value.\n";
             return false;
         }
         else if (expr[i] == ')' && expr[i + 1] == '(') {
-            cout << "Invalid. Missing operator between i = " << i << " and i = " << i + 1 << "\n";
+            cout << "Missing operator between i = " << i << " and i = " << i + 1 << "\n";
             return false;
         }
         else if (expr[i] == '!' && expr[i + 1] == '!') {
-            cout << "Invalid. Consecutive !s at i = " << i << " and i = " << i + 1 << "\n";
+            cout << "Consecutive !s at i = " << i << " and i = " << i + 1 << "\n";
             return false;
         }
         else if (is_truth_value(expr[i]) && (expr[i - 1] == ')' || expr[i + 1] == '(')) {
-            cout << "Invalid. Truth value adjacent to outer parenthesis at i = " << i << "\n";
+            cout << "Truth value adjacent to outer parenthesis at i = " << i << "\n";
             return false;
         }
     }
@@ -199,7 +199,7 @@ string parse_no_parens(string expr) {
 }
 
 string parse_parens(string expr, int index) {
-    cout << "Parsing " << expr << "\n";
+    //cout << "Parsing " << expr << "\n";
     string new_expr = expr;
     int i_paren_right = 0;
     //cout << "i_paren_right set to 0: " << i_paren_right << "\n";
@@ -265,7 +265,7 @@ int main() {
        return 0;
     }
     else {
-        cout << "Expression is invalid.\n";
+        cerr << "Expression is invalid.\n";
         return 1;
     }
 }
