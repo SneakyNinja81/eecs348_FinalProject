@@ -1,6 +1,6 @@
 # User Manual
 ## Introduction
-This repository contain the C++ code for a Boolean algebra calcualtor. 
+This repository contains the C++ code for a Boolean algebra calculator. 
 The calculator takes an input Boolean algebra expression and outputs the expression's truth value.
 
 
