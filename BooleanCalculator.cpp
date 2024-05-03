@@ -146,15 +146,68 @@ bool expression_is_valid(string expr) {
     }
 }
 
-string parse_parens(string expr) {
+string parse_no_parens(string expr) {
+    cout << "Beginning no parentheses parse of " << expr << "\n";
+
+
+    return "T"; //temporary
+}
+
+string parse_parens(string expr, int index) {
+    cout << "Beginning parentheses parse of " << expr << "\n";
     string new_expr = expr;
+    int i_paren_right = 0;
+    cout << "i_paren_right set to 0: " << i_paren_right << "\n";
+    for (int i = index; i < new_expr.length(); ++i) {
+        if (new_expr[i] == ')') {
+            i_paren_right = i;
+            cout << "i_paren_right set: " << i_paren_right << "\n";
+            break;
+        }
+    }
+    string paren_expr = new_expr.substr(index, i_paren_right - index);
+    cout << "Parentheses expression is " << paren_expr << "\n";
+    string before_parens = new_expr.substr(0, index - 1);
+    cout << "Expression before is " << before_parens << "\n";
+    string after_parens = new_expr.substr(i_paren_right + 1);
+    cout << "Expression after is " << after_parens << "\n";
+
+    paren_expr = parse_no_parens(paren_expr);
+    new_expr = before_parens + paren_expr + after_parens;
+    cout << "New expression is " << new_expr << "\n";
+
     return new_expr;
 }
 
-char parse(string expr) {
-    cout << "Beginning expression parse.\n";
-    return 'T'; //temporary
+string parse(string expr, int index) {
+    string new_expr = expr;
+    cout << "Parsing " << new_expr << "\n";
+    if (new_expr.find(')') != string::npos) {
+        int i_paren_left = 0;
+        cout << "i_paren_left set to 0: " << i_paren_left << "\n";
+        for (int i = 0; i < new_expr.length(); ++i) {
+            if (new_expr[i] == '(') {
+                i_paren_left = i;
+                cout << "i_paren_left set: " << i_paren_left << "\n";
+            }
+            if (new_expr[i] == ')') {
+                cout << "i_paren_left passed to parse_parens: " << i_paren_left << "\n";
+                new_expr = parse_parens(new_expr, i_paren_left + 1);
+                break;
+            }
+        }
+    }
+    else {
+        new_expr = parse_no_parens(new_expr);
+    }
+    if (new_expr.length() != 1) {
+        cout << "Recursing with expression: " << new_expr << "\n";
+        new_expr = parse(new_expr, 0);
+    }
+
+    return new_expr;
 }
+
 
 int main() {
     string expr;
@@ -171,7 +224,7 @@ int main() {
         cout << ans[0] << "\n";
         return 0;
         */
-       char result = parse(expr);
+       string result = parse(expr, 0);
        cout << "Result: " << result << "\n";
        return 0;
     }
