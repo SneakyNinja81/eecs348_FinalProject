@@ -146,11 +146,37 @@ bool expression_is_valid(string expr) {
     }
 }
 
+string parse_nots(string expr) {
+    string new_expr = expr;
+    return new_expr;
+}
+
 string parse_no_parens(string expr) {
     cout << "Beginning no parentheses parse of " << expr << "\n";
-
-
-    return "T"; //temporary
+    string new_expr = expr;
+    new_expr = parse_nots(new_expr);
+    if (new_expr.length() == 1) {
+        return new_expr;
+    }
+    else {
+        string leftmost_expr = "";
+        switch (new_expr[1]) {
+            case '&':
+                leftmost_expr = AND(new_expr[0], new_expr[2]);
+                break;
+            case '|':
+                leftmost_expr = OR(new_expr[0], new_expr[2]);
+                break;
+            case '@':
+                leftmost_expr = NAND(new_expr[0], new_expr[2]);
+                break;
+            case '$':
+                leftmost_expr = NOR(new_expr[0], new_expr[2]);
+                break;
+        }
+        new_expr = leftmost_expr + new_expr.substr(3);
+        return parse_no_parens(new_expr);
+    }
 }
 
 string parse_parens(string expr, int index) {
