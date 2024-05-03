@@ -66,7 +66,7 @@ bool chars_are_valid(string expr) {
             return false;
         }
     }
-    cout << "Expression contains valid characters.\n";
+    //cout << "Expression contains valid characters.\n";
     return true;
 }
 
@@ -89,7 +89,7 @@ bool parens_are_valid(string expr) {
         cout << "Invalid. Expression missing ')'\n";
         return false;
     }
-    cout << "Expression contains valid parentheses.\n";
+    //cout << "Expression contains valid parentheses.\n";
     return true;
 }
 
@@ -127,7 +127,7 @@ bool sequence_is_valid(string expr) {
             return false;
         }
     }
-    cout << "Expression sequence is valid.\n";
+    //cout << "Expression sequence is valid.\n";
     return true;
 }
 
@@ -137,7 +137,7 @@ bool expression_is_valid(string expr) {
         return true;
     }
     else {
-        cout << "Invalid expression.\n";
+        //cout << "Invalid expression.\n";
         return false;
     }
 }
@@ -167,7 +167,7 @@ string parse_nots(string expr) {
 }
 
 string parse_no_parens(string expr) {
-    cout << "Beginning no parentheses parse of " << expr << "\n";
+    cout << "Parsing " << expr << "\n";
     string new_expr = expr;
     new_expr = parse_nots(new_expr);
     if (new_expr.length() == 1) {
@@ -195,7 +195,7 @@ string parse_no_parens(string expr) {
 }
 
 string parse_parens(string expr, int index) {
-    cout << "Beginning parentheses parse of " << expr << "\n";
+    cout << "Parsing " << expr << "\n";
     string new_expr = expr;
     int i_paren_right = 0;
     //cout << "i_paren_right set to 0: " << i_paren_right << "\n";
@@ -209,9 +209,9 @@ string parse_parens(string expr, int index) {
     string paren_expr = new_expr.substr(index, i_paren_right - index);
     cout << "Parentheses expression is " << paren_expr << "\n";
     string before_parens = new_expr.substr(0, index - 1);
-    cout << "Expression before is " << before_parens << "\n";
+    //cout << "Expression before is " << before_parens << "\n";
     string after_parens = new_expr.substr(i_paren_right + 1);
-    cout << "Expression after is " << after_parens << "\n";
+    //cout << "Expression after is " << after_parens << "\n";
 
     paren_expr = parse_no_parens(paren_expr);
     new_expr = before_parens + paren_expr + after_parens;
@@ -242,7 +242,7 @@ string parse(string expr, int index) {
         new_expr = parse_no_parens(new_expr);
     }
     if (new_expr.length() != 1) {
-        cout << "Recursing with expression: " << new_expr << "\n";
+        //cout << "Recursing with expression: " << new_expr << "\n";
         new_expr = parse(new_expr, 0);
     }
 
@@ -256,15 +256,6 @@ int main() {
     std::getline(std::cin, expr);
     expr = remove_spaces(expr);
     if (expression_is_valid(expr)) {
-        /*
-        string ans = parse(expr);
-        if (ans == "") {
-            return 1;
-        }
-        cout << "The expression is\n";
-        cout << ans[0] << "\n";
-        return 0;
-        */
        string result = parse(expr, 0);
        cout << "Result: " << result << "\n";
        return 0;
